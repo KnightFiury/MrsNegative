@@ -1,0 +1,15 @@
+# OS cruft
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs and scratch
+*.log
+
+# Mrs. Negative local usage data
+.mrs-negative/

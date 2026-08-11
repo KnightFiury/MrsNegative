@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# Mrs. Negative pre-commit gate.
+#
+# Design choice: this hook does NOT invoke an agent itself — hooks run
+# synchronously and shouldn't depend on a network/API call succeeding.
+# It reads .mrs-negative/review-log.md (written per PERSONA.md's
+# "Review log" section) and blocks if a staged file's most recent
+# logged entry shows an unresolved BLOCKING finding.
+#
+# This is a backstop, not a substitute for the self-check rule in
+# PERSONA.md — it's only as good as whether the log actually got
+# written to.
+#
+# It also keeps the regeneration invariant: any staged change to
+# PERSONA.md must be accompanied by every regenerated file
+# (adapters/* + skills/mrs-negative/SKILL.md).
+#
+# Enable it repo-wide with:
+#   git config core.hooksPath .githooks
+# Bypass once with:
+#   MRS_NEGATIVE_OVERRIDE=1 git commit ...
+
+set -euo pipefail
+
+LOG_FILE=".mrs-negative/review-log.md"
+OVERRIDE="${MRS_NEGATIVE_OVERRIDE:-0}"
+
+if [ "$OVERRIDE" = "1" ]; then
+    echo "Mrs. Negative: override set, skipping."
+    exit 0
+fi
+
+# --- Regeneration sync guard ----------------------------------------------
+PERSONA="PERSONA.md"
+GENERATED="adapters/opencode/AGENTS.md adapters/codex/codex.md adapters/generic-system-prompt.md skills/mrs-negative/SKILL.md"
+
+staged="$(git diff --cached --name-only --diff-filter=ACMRT || true)"
+
+if printf '%s\n' "$staged" | grep -Fxq "$PERSONA"; then
+    echo "PERSONA.md is staged — verifying all generated files are regenerated..."
+    missing=""
+    for f in $GENERATED; do
+        if ! printf '%s\n' "$staged" | grep -Fxq "$f"; then
+            missing="$missing $f"
+        fi
+    done
+    if [ -n "$missing" ]; then
+        echo "🛑 BLOCKED — PERSONA.md changed but these generated files did not:" >&2
+        for f in $missing; do
+            echo "  - $f" >&2
+        done
+        echo "Regenerate them (README.md, 'Regenerating generated files'), then re-stage." >&2
+        exit 1
+    fi
+    echo "All generated files are present."
+fi
+
+# --- Review-log gate --------------------------------------------------------
+[ -f "$LOG_FILE" ] || exit 0   # no log yet — nothing to check against
+
+BLOCKED=0
+# -z + read -d '' keeps spaced filenames whole; --diff-filter=ACMRT matches
+# the regen guard above (deletes excluded deliberately: a removed file
+# takes its findings with it).
+while IFS= read -r -d '' f; do
+    LAST_LINE=$(grep -F "| $f |" "$LOG_FILE" | tail -n 1 || true)
+    # LC_ALL=C: GNU grep's UTF-8 locale can silently miss multi-byte emoji
+    # like 🛑; byte matching in the C locale is deterministic everywhere.
+    if [ -n "$LAST_LINE" ] && printf '%s' "$LAST_LINE" | LC_ALL=C grep -q "🛑"; then
+        echo "🛑 BLOCKING finding logged for $f and not yet cleared:"
+        echo "   $LAST_LINE"
+        BLOCKED=1
+    fi
+done < <(git diff --cached --name-only -z --diff-filter=ACMRT || true)
+
+if [ "$BLOCKED" = "1" ]; then
+    echo ""
+    echo "Commit blocked. Resolve it, update the log entry, or override:"
+    echo "  MRS_NEGATIVE_OVERRIDE=1 git commit ..."
+    exit 1
+fi
+
+exit 0

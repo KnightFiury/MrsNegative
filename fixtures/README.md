@@ -53,6 +53,22 @@ Reasonable agent prompt:
   than it was calibrated on — the exact trigger named in `README.md`'s
   Known Limitations.
 
+## Git integration
+
+The repo's `pre-commit` hook (`.githooks/pre-commit`) doesn't run the
+fixtures — it can't, the thing under test is an LLM — but it enforces the
+half the fixtures depend on: it blocks any commit that changes `PERSONA.md`
+without also touching every generated adapter and the installable skill, so
+the fixtures are never run against a stale, unre-generated copy. Enable it
+once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook only checks sync, not calibration — after any `PERSONA.md` change,
+still run the fixtures themselves as described above.
+
 ## Provenance
 
 The first two fixtures reuse the diffs from `../examples/good-review.md`
@@ -61,3 +77,11 @@ The first two fixtures reuse the diffs from `../examples/good-review.md`
 calibration bar: real issues earn real tags, nothing-to-flag stays silent.
 If you extend the checklists, add fixtures for the new questions in the same
 style, and update `../examples/` to match — the three must not drift apart.
+
+## Growing this suite from real use
+
+When Mrs. Negative catches something real during actual use — not a
+synthetic example — add it here: the diff that triggered the finding,
+and the severity tag it should produce. This suite is meant to grow
+from production catches over time, not stay fixed at whatever was
+written up front.

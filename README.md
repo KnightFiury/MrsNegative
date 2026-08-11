@@ -120,6 +120,9 @@ noise that gets ignored.
 MrsNegative/
 ├── LICENSE                           # Apache 2.0
 ├── PERSONA.md                        # core, tool-agnostic persona — single source of truth, and the ONLY file you edit
+├── .gitignore
+├── .githooks/
+│   └── pre-commit                    # review-log gate: blocks unresolved 🛑 findings, enforces regeneration sync
 ├── checklists/
 │   ├── necessity.md                  # YAGNI questions
 │   ├── reliability.md                # failure-mode questions
@@ -205,6 +208,25 @@ a package.
 
 ---
 
+## Enabling the pre-commit gate (optional)
+
+The `.githooks/pre-commit` hook reads the review log (see PERSONA.md's
+"Review log" section) and blocks a commit if a staged file's most recent
+logged entry shows an unresolved `🛑 BLOCKING` finding. It's a backstop,
+not a live review — it never invokes an agent itself, so it works offline
+and can't fail on a hung API call. It also keeps the regeneration
+invariant: a commit that stages a `PERSONA.md` change must stage every
+regenerated file alongside it.
+
+```bash
+git config core.hooksPath .githooks
+chmod +x .githooks/pre-commit
+```
+
+Bypass a specific commit with `MRS_NEGATIVE_OVERRIDE=1 git commit ...`.
+
+---
+
 ## Regenerating generated files
 
 `PERSONA.md` is the only file you edit. When it changes, regenerate every
@@ -218,7 +240,10 @@ generated file to keep up with it:
 
 That prompt works with any coding agent, or just do it yourself. After
 regenerating, run the [calibration fixtures](#calibration-fixtures) to
-confirm the change didn't push severity off its calibration.
+confirm the change didn't push severity off its calibration. If you've
+enabled the [pre-commit gate](#enabling-the-pre-commit-gate-optional),
+it will refuse any commit that stages a `PERSONA.md` change without staging
+every regenerated file alongside it.
 
 ---
 
@@ -237,10 +262,12 @@ run prompt live in [`fixtures/README.md`](./fixtures/README.md).
 
 ## Design Principles
 
-1. **Diff-scoped, not file-scoped.** She reviews what changed. Re-auditing
+1. **Diff-scoped, not file-scoped.** She reviews what changed, not the whole
+   file — the diff under review is her canonical input. Re-auditing
    untouched code on every edit is how reviewers turn into noise machines.
 2. **A complaint without a fix isn't a review.** Every single finding —
-   even nitpicks — includes a concrete next action.
+   even nitpicks — includes a concrete next action. If she can't articulate
+   a fix, she downgrades her confidence in the complaint before raising it.
 3. **Severity is earned, not inflated.** `BLOCKING` is reserved for things
    that would actually hurt someone: exploits, data loss, crashes on
    realistic input. Everything else gets reported and the agent keeps moving.
@@ -248,7 +275,7 @@ run prompt live in [`fixtures/README.md`](./fixtures/README.md).
    line and stops — she doesn't manufacture a nitpick to look thorough.
 5. **One consistent voice.** She's a specific colleague archetype, not a
    randomized tone generator — that consistency is what makes her outputs
-   predictable and easy to skim over time.
+   predictable and easy to skim over time, in chat or in the review log.
 
 ---
 
@@ -279,10 +306,16 @@ run prompt live in [`fixtures/README.md`](./fixtures/README.md).
 Apache 2.0 — use it, fork it, extend the checklists for your own stack. The
 full license text is in [`LICENSE`](./LICENSE).
 
-This working copy isn't under version control yet. Nothing in the layout
-depends on git — when you're happy with the structure, initialize it
-(`git init`, commit, push). The tree above and all relative links work either
-way.
+This repo is under active development. The working copy is version-controlled
+(`main`, synced to `origin`), and a `pre-commit` hook in `.githooks/`
+enforces the review log (blocks commits with an unresolved logged `🛑`) and
+guards the regeneration invariant: `PERSONA.md` is the only file you edit, so
+any commit that changes it must also regenerate every generated file under
+`adapters/` and `skills/`. Enable the hook once per clone as described under
+[Enabling the pre-commit gate](#enabling-the-pre-commit-gate-optional).
+
+The tree above and all relative links work regardless — the repo doesn't
+require git, and the hook is a backstop, not a dependency.
 
 ---
 
