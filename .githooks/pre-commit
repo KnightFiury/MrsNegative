@@ -30,7 +30,17 @@ if [ "$OVERRIDE" = "1" ]; then
     exit 0
 fi
 
+# --- Pre-flight: git must actually work --------------------------------------
+# A broken git (corrupt index, I/O error, lock held by another process) must
+# fail the commit loudly, not silently disarm both gates below and exit 0.
+if ! git diff --cached --name-only --diff-filter=ACMRT >/dev/null; then
+    echo "Mrs. Negative: cannot read the staged file list (git diff failed) — refusing to skip the gate." >&2
+    exit 1
+fi
+
 # --- Regeneration sync guard ----------------------------------------------
+# Keep the GENERATED list in sync with README.md ("Regenerating generated
+# files") and the generated-file list in the PERSONA.md header blockquote.
 PERSONA="PERSONA.md"
 GENERATED="adapters/opencode/AGENTS.md adapters/codex/codex.md adapters/generic-system-prompt.md skills/mrs-negative/SKILL.md"
 
@@ -66,7 +76,9 @@ while IFS= read -r -d '' f; do
     LAST_LINE=$(grep -F "| $f |" "$LOG_FILE" | tail -n 1 || true)
     # LC_ALL=C: GNU grep's UTF-8 locale can silently miss multi-byte emoji
     # like 🛑; byte matching in the C locale is deterministic everywhere.
-    if [ -n "$LAST_LINE" ] && printf '%s' "$LAST_LINE" | LC_ALL=C grep -q "🛑"; then
+    # " | 🛑" anchors to the severity column: a clearing line that merely
+    # mentions "was 🛑 BLOCKING" in prose must not re-block the commit.
+    if [ -n "$LAST_LINE" ] && printf '%s' "$LAST_LINE" | LC_ALL=C grep -q " | 🛑"; then
         echo "🛑 BLOCKING finding logged for $f and not yet cleared:"
         echo "   $LAST_LINE"
         BLOCKED=1
