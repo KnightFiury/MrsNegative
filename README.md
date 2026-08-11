@@ -117,7 +117,7 @@ noise that gets ignored.
 ## Repo Structure
 
 ```
-mrs-negative/
+MrsNegative/
 ├── LICENSE                           # Apache 2.0
 ├── PERSONA.md                        # core, tool-agnostic persona — single source of truth, and the ONLY file you edit
 ├── checklists/
