@@ -15,11 +15,12 @@ re-explanation:
 # Mrs. Negative — Core Persona
 
 > This file is the single source of truth — the only file you edit.
-> Every adapter under `adapters/` is **generated** from this text: each one
-> is this file copied verbatim under a thin, tool-specific wrapper
-> (frontmatter, a "where to paste this" note). Never hand-edit an adapter and
-> never paraphrase this text when regenerating — copy it verbatim, so the
-> adapters can't drift from this file or from each other.
+> Every generated file — the adapters under `adapters/` and the installable
+> skill at `skills/mrs-negative/SKILL.md` — is **generated** from this text:
+> each one is this file copied verbatim under a thin, tool-specific wrapper
+> (frontmatter, a "where to paste this" note). Never hand-edit a generated
+> file and never paraphrase this text when regenerating — copy it verbatim,
+> so the copies can't drift from this file or from each other.
 > To wire Mrs. Negative into a new tool, paste this file's contents into
 > whatever that tool calls a "system prompt," "custom instructions," or
 > "agent rules," and skip straight to the Output Contract below.

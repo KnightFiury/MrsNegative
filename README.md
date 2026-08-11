@@ -49,8 +49,9 @@ She is built to be:
 
 - **Portable** — one plain-text persona definition, no tool-specific
   syntax, that can be pasted into any agent's instructions.
-- **Synchronized** — adapters are generated from `PERSONA.md`, so a
-  checklist change can't silently fail to reach one tool.
+- **Synchronized** — the adapters and the installable skill are generated
+  from `PERSONA.md`, so a checklist change can't silently fail to reach one
+  tool.
 - **Automatic** — triggers after every code change, not on request.
 - **Constructive** — every complaint ships with a concrete fix. No
   "this is bad" without "do this instead."
@@ -128,10 +129,11 @@ mrs-negative/
 │   ├── maintainability.md            # readability + dependency-trust questions
 │   └── confidence-check.md           # "are you actually sure?" questions
 ├── adapters/                         # GENERATED from PERSONA.md — do not hand-edit
-│   ├── claude-code/SKILL.md          # Claude Code skill (frontmatter + inlined persona)
 │   ├── opencode/AGENTS.md            # opencode project rules (inlined persona)
 │   ├── codex/codex.md                # Codex custom instructions (inlined persona)
 │   └── generic-system-prompt.md      # self-contained block for Kimi / any other agent
+├── skills/                           # GENERATED — the installable skill (Claude Code)
+│   └── mrs-negative/SKILL.md         # frontmatter + inlined persona
 ├── fixtures/                         # calibration pairs: diff + expected severity tags
 │   ├── README.md                     # format, grading rules, when to run
 │   ├── security/                     # injection, IDOR, SSRF, CSRF
@@ -151,12 +153,39 @@ mrs-negative/
 loading persistent instructions (Claude Code skills, `AGENTS.md`, Codex
 custom instructions, a raw system prompt). Rather than maintaining the
 persona separately per tool and watching the copies drift, `PERSONA.md` is
-the only file that actually defines her behavior, and the adapters are
-**generated** from it: each adapter is `PERSONA.md` inlined verbatim under a
-thin, tool-specific wrapper. A generated copy can't silently lose a checklist
+the only file that actually defines her behavior, and the adapters plus the
+installable skill are **generated** from it: each is `PERSONA.md` inlined
+verbatim under a thin, tool-specific wrapper. A generated copy can't silently
+lose a checklist
 category or a severity rule the way a hand-maintained copy can — and because
 each adapter is self-contained, pasting one anywhere works standalone. See
-[Regenerating adapters](#regenerating-adapters) below.
+[Regenerating generated files](#regenerating-generated-files) below.
+
+---
+
+## Installing
+
+MrsNegative ships a single installable skill (`mrs-negative`) under
+`skills/`, which `npx skills add` scans to find installable skills.
+
+```bash
+npx skills add https://github.com/KnightFiury/MrsNegative
+```
+
+To target a specific skill by its `name:` field from the SKILL.md
+frontmatter — not the folder name:
+
+```bash
+npx skills add https://github.com/KnightFiury/MrsNegative --skill "mrs-negative"
+```
+
+For tools that don't use the `npx skills` CLI, copy
+`skills/mrs-negative/SKILL.md` into your project directly, or paste it into a
+Claude, Codex, or ChatGPT conversation.
+
+This skill doesn't have prior versions yet — if MrsNegative introduces
+breaking persona changes in the future, this section will document the
+upgrade path and any version-pinned install name.
 
 ---
 
@@ -166,7 +195,7 @@ Pick the adapter matching your tool and follow it — each is a few lines:
 
 | Tool | Adapter | What to do |
 |---|---|---|
-| Claude Code | [`adapters/claude-code/SKILL.md`](./adapters/claude-code/SKILL.md) | Drop the `mrs-negative/` folder into your skills directory as-is |
+| Claude Code | [`skills/mrs-negative/SKILL.md`](./skills/mrs-negative/SKILL.md) | `npx skills add https://github.com/KnightFiury/MrsNegative` — see [Installing](#installing) |
 | opencode | [`adapters/opencode/AGENTS.md`](./adapters/opencode/AGENTS.md) | Paste the file's contents into your project's `AGENTS.md` — it's self-contained |
 | Codex | [`adapters/codex/codex.md`](./adapters/codex/codex.md) | Paste into your project's custom instructions |
 | Anything else (Kimi, raw API, custom harness) | [`adapters/generic-system-prompt.md`](./adapters/generic-system-prompt.md) | Paste the self-contained block into your system prompt |
@@ -176,14 +205,16 @@ a package.
 
 ---
 
-## Regenerating adapters
+## Regenerating generated files
 
-`PERSONA.md` is the only file you edit. When it changes, regenerate all four
-adapters in one step — never hand-edit an adapter to keep up with it:
+`PERSONA.md` is the only file you edit. When it changes, regenerate every
+generated file in one step — the three adapters under `adapters/` plus the
+installable skill at `skills/mrs-negative/SKILL.md`. Never hand-edit a
+generated file to keep up with it:
 
-> Regenerate all four adapter files by inlining the current `PERSONA.md`
-> content verbatim under each adapter's tool-specific header. Do not
-> paraphrase, shorten, or re-explain `PERSONA.md` — copy it exactly.
+> Regenerate every adapter and the installable skill by inlining the current
+> `PERSONA.md` content verbatim under each file's tool-specific header. Do
+> not paraphrase, shorten, or re-explain `PERSONA.md` — copy it exactly.
 
 That prompt works with any coding agent, or just do it yourself. After
 regenerating, run the [calibration fixtures](#calibration-fixtures) to
