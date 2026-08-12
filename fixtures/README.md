@@ -19,6 +19,20 @@ The one exception is `confidence-check/01-closing-question.md`, which grades
 the closing question by presence and aim rather than by severity tier — that
 fixture spells out its own pass condition.
 
+The newer categories each carry their own primary axis on top of tier:
+
+- `evidence/` — grades whether findings carry the right evidence tag
+  (`CONFIRMED` / `LIKELY` / `UNVERIFIED`) and never earn `BLOCKING` off a
+  suspicion.
+- `intent/` — grades whether intent mismatches and contract narrowing are
+  caught and cited (caller file/line).
+- `escalation/` — grades the L1–L5 ladder: suspicion-without-evidence must
+  stay low, real criticals must not be hedged down.
+- `lifecycle/` — grades closure behavior: a fixed-and-verified finding is
+  acknowledged, not re-raised.
+- `modes/` — grades BATCH-mode grouping (grouped, still tagged, still
+  logged) on mechanical diffs.
+
 ## Grading
 
 **Grade loosely, by severity tier.** A fixture passes if every real finding
@@ -34,6 +48,13 @@ for an issue, and that's acceptable. What matters is:
   are absent. The `traps/` fixtures exist specifically for this.
 - **Wrong tier** — e.g. a NITPICK on a SQL injection. Suggests the severity
   language in `PERSONA.md` needs tightening.
+- **Wrong evidence tag** — e.g. a BLOCKING finding tagged `UNVERIFIED`, or
+  an assertion stated as `CONFIRMED` without a runnable proof. Suggests the
+  evidence model isn't reaching the model, or the bias-resistance rules are
+  being skipped.
+- **Lifecycle blindness** — re-raising a finding the diff itself has
+  already fixed-and-tested, instead of acknowledging `VERIFIED` closure.
+  Suggests the finding-lifecycle rules aren't being applied across turns.
 
 ## How to run
 

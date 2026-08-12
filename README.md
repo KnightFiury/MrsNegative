@@ -2,7 +2,7 @@
 
 # Mrs. Negative
 
-> *A skeptical, security-paranoid code-review persona for AI coding agents.*
+> *A skeptical, security-paranoid code-review persona — and verification protocol — for AI coding agents.*
 
 [![Portable](https://img.shields.io/badge/Portable-Any%20Agent-black)]()
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Supported-D97757)]()
@@ -22,6 +22,13 @@ reports the task as done. She isn't a linter and she isn't sarcasm for its
 own sake. She's the senior engineer archetype who assumes, by default,
 that new code is broken, exploitable, or unnecessary — and makes the
 agent prove otherwise, function by function.
+
+She is also a **verification protocol**. Every finding carries evidence
+(`CONFIRMED` / `LIKELY` / `UNVERIFIED`), an escalation level (L1–L5), an
+impact statement, a concrete fix, and a named verification step.
+**Suspicion earns investigation. Evidence earns severity.** An unverified
+"what if" never gets a `BLOCKING` tag, and a real critical never gets
+hedged into a nitpick because fixing it is annoying.
 
 > "Do we actually need this, do we?"
 > "This'll break on an empty array, won't it?"
@@ -57,6 +64,9 @@ She is built to be:
   "this is bad" without "do this instead."
 - **Calibrated** — severity-tagged, so a real SQL injection and a
   slightly-unclear variable name don't get the same alarm level.
+- **Verification-first** — findings come with evidence, an escalation
+  level, an impact, a fix, and a regression test, so the review is
+  checkable by someone other than the agent that produced it.
 
 ---
 
@@ -83,11 +93,13 @@ Every changed block is run through a fixed set of categories:
 | Error handling | If this fails, does the caller find out, or is it swallowed? |
 | Dependency trust | Does the external call have a timeout? What if it lies to us? |
 | Maintainability | Will the next person know *why* this exists? |
+| Intent | Does this do what the change claims to do — or has a contract been silently narrowed? |
 | Confidence check | Are you actually sure about the risky part, or hoping? |
+| Evidence | What proof backs the finding — CONFIRMED, LIKELY, or UNVERIFIED? |
 
 Full question banks per category live in [`checklists/`](./checklists).
 
-### 3. Severity — and what actually blocks
+### 3. Severity, evidence, and what actually blocks
 
 | Tag | Meaning | Behavior |
 |---|---|---|
@@ -95,13 +107,52 @@ Full question banks per category live in [`checklists/`](./checklists).
 | ⚠️ `WORTH-FIXING` | Real risk, not catastrophic | Reported with a fix, agent continues |
 | 💭 `NITPICK` | Style / minor maintainability | Mentioned once, batched, never blocks |
 
-### 4. Output contract
+Severity is earned through an escalation ladder (L1–L5) backed by evidence.
+Every finding carries an evidence tag — `CONFIRMED` (inspected and
+reproduced), `LIKELY` (airtight reasoning, couldn't execute in-session), or
+`UNVERIFIED` (plausible, couldn't check). `BLOCKING` requires
+`CONFIRMED`/`LIKELY`; an unverified suspicion tops out at `WORTH-FIXING` and
+must say what couldn't be checked. Dependency claims get their own levels:
+`VERIFIED`, `ASSUMED`, `UNKNOWN`.
 
-Every flagged issue ships with a concrete fix, in a fixed format:
+### 4. Intent, lifecycle, and modes
+
+- **Intent preservation** — every diff is checked against its stated
+  purpose: behavior that contradicts the claim, silently narrowed contracts
+  (cited caller-by-caller), and over- or under-implementation.
+- **Finding lifecycle** — findings move `OPEN → FIXED → VERIFIED`, with
+  `WONT-FIX` (reasoned rebuttal) and `OVERRIDDEN` (user override) as
+  terminal states. Only a `VERIFIED` BLOCKING finding is fully closed.
+- **Modes** — `STRICT` (default, full per-change pass) or `BATCH`
+  (mechanical bulk changes: grouped findings, same rules, still logged).
+
+### 5. BLOCKING repair loop
+
+A `🛑` finding stops feature work and runs: **Stop → Investigate → Fix →
+Regression test → Run → Re-review → Continue.** Every `BLOCKING` fix (and
+real `WORTH-FIXING` fixes) requires a failing-first regression test when the
+project has test infrastructure — a fix that isn't pinned is a fix that
+drifts back.
+
+### 6. Tool awareness
+
+Mrs. Negative sits *above* the toolchain: the compiler, linter, and test
+runner own their error classes, and she doesn't re-raise what they already
+caught — she cites them as evidence. A green suite is the floor, not the
+review; she adds what tools can't express: intent mismatches, edge-case
+semantics, design risk, and the triage that decides what actually blocks.
+
+### 7. Output contract
+
+Every flagged issue ships with a concrete fix, in a fixed format — each
+finding carries **evidence, impact, a fix, and a verification step**:
 
 ```
-🛑 [SECURITY] Building the query by concatenating `userId` — SQL injection risk.
+🛑 [SECURITY] [CONFIRMED] Building the query by concatenating `userId` — SQL injection risk.
+   Evidence: `userId=1' OR '1'='1` returns every row; `1'; DROP TABLE orders; --` drops the table.
+   Impact: any caller can read or destroy the whole table.
    → Fix: use a parameterized query instead of string interpolation.
+   Verification: run the payload against the endpoint — 0 rows returned, no table dropped.
 ```
 
 ...and every review closes with one in-character confidence-check line
@@ -130,6 +181,8 @@ MrsNegative/
 │   ├── concurrency.md                # race condition questions
 │   ├── error-handling.md             # swallowed failures, partial state
 │   ├── maintainability.md            # readability + dependency-trust questions
+│   ├── intent.md                     # "does this do what it claims" questions
+│   ├── evidence.md                   # CONFIRMED / LIKELY / UNVERIFIED questions
 │   └── confidence-check.md           # "are you actually sure?" questions
 ├── adapters/                         # GENERATED from PERSONA.md — do not hand-edit
 │   ├── opencode/AGENTS.md            # opencode project rules (inlined persona)
@@ -143,7 +196,12 @@ MrsNegative/
 │   ├── reliability/                  # null input, timeouts, swallowed failures
 │   ├── concurrency/                  # check-then-act, lost updates, idempotency
 │   ├── necessity/                    # YAGNI
-│   ├── maintainability/              # names, magic numbers
+│   ├── maintainability/              # names, magic numbers, emoji
+│   ├── evidence/                     # evidence-tag calibration (CONFIRMED / LIKELY / UNVERIFIED)
+│   ├── intent/                       # intent preservation, contract narrowing
+│   ├── escalation/                   # L1–L5 ladder: suspicion vs. proven critical
+│   ├── lifecycle/                    # finding closure: fixed-and-verified, not re-raised
+│   ├── modes/                        # STRICT vs. BATCH grouping
 │   ├── confidence-check/             # closing question — grades presence, not tier
 │   └── traps/                        # over-tagging temptations — must stay quiet
 ├── examples/
@@ -286,6 +344,14 @@ run prompt live in [`fixtures/README.md`](./fixtures/README.md).
   deterministic rule engine. Expect some drift across models/providers. The
   [`fixtures/`](./fixtures) calibration suite is the early-warning check for
   this: run it when you change `PERSONA.md` or switch models.
+- Evidence is **self-reported** — a `CONFIRMED` tag means the model says it
+  inspected the path, not that the path is safe. The bias-resistance rules
+  in `PERSONA.md` exist precisely to make a faked `CONFIRMED` hard to get
+  away with, but it is not mechanically verifiable.
+- The finding lifecycle (OPEN→FIXED→VERIFIED) and STRICT/BATCH modes assume
+  a stateful, multi-turn conversation. In a stateless single-shot harness
+  the lifecycle compresses to OPEN (or FIXED if the fix is in the same
+  diff) and BATCH mode is rarely relevant.
 - Diff-only scope means pre-existing issues outside the changed lines are
   only lightly flagged, not fully audited — this is a running-review tool,
   not a full security audit.
