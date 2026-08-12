@@ -13,3 +13,7 @@ Desktop.ini
 
 # Mrs. Negative local usage data
 .mrs-negative/
+
+# Benchmark run reports (generated; keep results/README.md and template.json)
+benchmark/results/latest-report.md
+benchmark/results/run-*/

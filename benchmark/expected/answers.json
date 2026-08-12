@@ -1,0 +1,706 @@
+{
+  "benchmarkVersion": "v1.0.0",
+  "generatedAt": "2026-08-12T04:17:50.548Z",
+  "count": 38,
+  "silentCount": 10,
+  "cases": {
+    "ARC-01": {
+      "id": "ARC-01",
+      "category": "architecture",
+      "title": "Auth moved to a middleware boundary — a route escapes it",
+      "mode": "STRICT",
+      "user_request": "Refactor auth into shared middleware so every route is protected by default, and only the public ones opt out.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "VERY-HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "the auth boundary changed, and the new admin route is registered before the middleware — it bypasses auth entirely",
+      "key_skills": [
+        "architecture",
+        "auth-boundary",
+        "middleware-ordering",
+        "seam"
+      ],
+      "file": "cases/architecture/ARC-01-auth-boundary-order.md"
+    },
+    "ARC-02": {
+      "id": "ARC-02",
+      "category": "architecture",
+      "title": "Idempotency moved to the client — the architecture no longer guarantees exactly-once",
+      "mode": "STRICT",
+      "user_request": "Move the exactly-once guarantee into the payment client so the checkout service can call it idempotently.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "LIKELY",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": false,
+      "primary_finding": "idempotency moved out of the transaction boundary; a retry can still double-charge if the client path is not truly idempotent",
+      "key_skills": [
+        "architecture",
+        "idempotency",
+        "boundary-movement",
+        "seam"
+      ],
+      "file": "cases/architecture/ARC-02-idempotency-boundary-move.md"
+    },
+    "ARC-03": {
+      "id": "ARC-03",
+      "category": "architecture",
+      "title": "Report generation moved out of the request transaction — consistency seam",
+      "mode": "STRICT",
+      "user_request": "Generate the monthly report as a background job so the API doesn't block, then serve it.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "LIKELY",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": false,
+      "primary_finding": "the data snapshot for the report is read at a different time than it is written, and the generation path has no consistency guarantee",
+      "key_skills": [
+        "architecture",
+        "consistency",
+        "read-snapshot",
+        "seam"
+      ],
+      "file": "cases/architecture/ARC-03-report-consistency-seam.md"
+    },
+    "CON-01": {
+      "id": "CON-01",
+      "category": "concurrency",
+      "title": "Check-then-act on inventory — oversell under concurrency",
+      "mode": "STRICT",
+      "user_request": "Deduct stock only when available; never sell below zero.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "separate SELECT-then-UPDATE allows two requests to both pass the stock check",
+      "key_skills": [
+        "concurrency",
+        "check-then-act",
+        "interleaving"
+      ],
+      "file": "cases/concurrency/CON-01-check-then-act-inventory.md"
+    },
+    "CON-02": {
+      "id": "CON-02",
+      "category": "concurrency",
+      "title": "Lost update on a shared counter",
+      "mode": "STRICT",
+      "user_request": "Track per-user download counts and expose the total.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "read-modify-write on the counter is not atomic — concurrent increments are lost",
+      "key_skills": [
+        "concurrency",
+        "lost-update",
+        "interleaving"
+      ],
+      "file": "cases/concurrency/CON-02-lost-update-counter.md"
+    },
+    "CON-03": {
+      "id": "CON-03",
+      "category": "concurrency",
+      "title": "Shared mutable module state under concurrent requests",
+      "mode": "STRICT",
+      "user_request": "Keep a module-level cache of active sessions so the app knows who is online.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "LIKELY",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "module-level Map mutated from concurrent request handlers without synchronization",
+      "key_skills": [
+        "concurrency",
+        "shared-mutable-state"
+      ],
+      "file": "cases/concurrency/CON-03-shared-mutable-state.md"
+    },
+    "CON-04": {
+      "id": "CON-04",
+      "category": "concurrency",
+      "title": "Non-idempotent side effect without a claim guard (queue worker)",
+      "mode": "STRICT",
+      "user_request": "Make the email-sending worker at-least-once safe so an email is never sent twice for the same job.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "job claimed and side effect run as separate steps with no atomicity between them",
+      "key_skills": [
+        "concurrency",
+        "idempotency",
+        "distributed-systems",
+        "interleaving"
+      ],
+      "file": "cases/concurrency/CON-04-queue-claim-no-guard.md"
+    },
+    "DI-01": {
+      "id": "DI-01",
+      "category": "data-integrity",
+      "title": "Transaction boundary narrower than the invariant it must protect",
+      "mode": "STRICT",
+      "user_request": "Move money between two accounts in a single atomic transaction; either both sides apply or neither does.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "only one of two writes is inside the transaction — a crash between them leaves money half-moved",
+      "key_skills": [
+        "data-integrity",
+        "transactions",
+        "failure-modes"
+      ],
+      "file": "cases/data-integrity/DI-01-transaction-boundary.md"
+    },
+    "DI-02": {
+      "id": "DI-02",
+      "category": "data-integrity",
+      "title": "Read-modify-write without versioning — stale data silently overwrites new data",
+      "mode": "STRICT",
+      "user_request": "Allow two users to edit a document concurrently without either edit being silently lost.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "LIKELY",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "the update writes a full object read earlier, so a concurrent edit is silently overwritten",
+      "key_skills": [
+        "data-integrity",
+        "lost-update",
+        "optimistic-concurrency",
+        "read-modify-write"
+      ],
+      "file": "cases/data-integrity/DI-02-stale-overwrite-version.md"
+    },
+    "DI-03": {
+      "id": "DI-03",
+      "category": "data-integrity",
+      "title": "Webhook handler not idempotent — at-least-once delivery double-applies",
+      "mode": "STRICT",
+      "user_request": "Handle Stripe payment webhooks. A single successful payment must result in exactly one balance credit.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "LIKELY",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "webhook handler applies the credit without an idempotency key, so a redelivery double-credits",
+      "key_skills": [
+        "data-integrity",
+        "idempotency",
+        "webhooks"
+      ],
+      "file": "cases/data-integrity/DI-03-webhook-not-idempotent.md"
+    },
+    "DEP-01": {
+      "id": "DEP-01",
+      "category": "dependencies",
+      "title": "Redis TTL default verified in-session — omission is safe",
+      "mode": "STRICT",
+      "user_request": "Cache the session lookup in Redis so the hot path is fast.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "none — the cache's TTL default is verified, so the key cannot live forever",
+      "key_skills": [
+        "dependencies",
+        "verify-not-assume",
+        "false-positive"
+      ],
+      "file": "cases/dependencies/DEP-01-redis-ttl-verified.md"
+    },
+    "DEP-02": {
+      "id": "DEP-02",
+      "category": "dependencies",
+      "title": "Assumed dependency response shape that the docs contradict",
+      "mode": "STRICT",
+      "user_request": "Call the accounts service to get the user's team, then show its name.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "code assumes `data.team` while the service returns `data.team_members[].name` — the two disagree",
+      "key_skills": [
+        "dependencies",
+        "api-contract",
+        "verify-not-assume"
+      ],
+      "file": "cases/dependencies/DEP-02-assumed-response-shape.md"
+    },
+    "DEP-03": {
+      "id": "DEP-03",
+      "category": "dependencies",
+      "title": "Unknown dependency semantics — must not assert either way",
+      "mode": "STRICT",
+      "user_request": "Rate-limit login attempts. Use the existing per-user limiter if it fits.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "UNVERIFIED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "the existing limiter's semantics (per-user? sliding? which key?) are UNKNOWN — must investigate, not assert",
+      "key_skills": [
+        "dependencies",
+        "unknown-behavior",
+        "investigate-dont-assume"
+      ],
+      "file": "cases/dependencies/DEP-03-unknown-limiter-semantics.md"
+    },
+    "FP-01": {
+      "id": "FP-01",
+      "category": "false-positives",
+      "title": "Dynamic-looking query that is fully parameterized",
+      "mode": "STRICT",
+      "user_request": "Add a search endpoint for the admin table.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "LOW",
+      "requires_regression_test": false,
+      "primary_finding": "none — the query is fully parameterized",
+      "key_skills": [
+        "false-positive",
+        "parameterized-queries",
+        "verify-not-assume"
+      ],
+      "file": "cases/false-positives/FP-01-dynamic-query-safe.md"
+    },
+    "FP-02": {
+      "id": "FP-02",
+      "category": "false-positives",
+      "title": "Lock acquired and released correctly around the critical section",
+      "mode": "STRICT",
+      "user_request": "Serialize coupon redemption so the same code can't be redeemed twice.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "none — the lock correctly covers the check-and-consume",
+      "key_skills": [
+        "false-positive",
+        "concurrency",
+        "locking"
+      ],
+      "file": "cases/false-positives/FP-02-lock-covers-critical-section.md"
+    },
+    "FP-03": {
+      "id": "FP-03",
+      "category": "false-positives",
+      "title": "Retry appears unbounded but a max-attempts cap is present",
+      "mode": "STRICT",
+      "user_request": "Make the worker retry the resizing call so it recovers from transient failures.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "none — the retry loop is bounded by an explicit max-attempts constant",
+      "key_skills": [
+        "false-positive",
+        "retry",
+        "bounded-loop"
+      ],
+      "file": "cases/false-positives/FP-03-bounded-retry-safe.md"
+    },
+    "FP-04": {
+      "id": "FP-04",
+      "category": "false-positives",
+      "title": "Error swallowing that is intentional and contractually required",
+      "mode": "STRICT",
+      "user_request": "Record the failed payment attempt but never fail the request over it.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "none — the catch is intentional and bounded",
+      "key_skills": [
+        "false-positive",
+        "error-handling",
+        "intentional-swallow"
+      ],
+      "file": "cases/false-positives/FP-04-intentional-error-swallow.md"
+    },
+    "FP-05": {
+      "id": "FP-05",
+      "category": "false-positives",
+      "title": "Magic value that is the API contract, not a magic number",
+      "mode": "STRICT",
+      "user_request": "Return the user's subscription tier from the plan service.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "LOW",
+      "requires_regression_test": false,
+      "primary_finding": "none — the literal is the external contract's enum value",
+      "key_skills": [
+        "false-positive",
+        "magic-number",
+        "contract-literal"
+      ],
+      "file": "cases/false-positives/FP-05-contract-literal-safe.md"
+    },
+    "INT-01": {
+      "id": "INT-01",
+      "category": "intent",
+      "title": "\"Only admins can delete accounts\" — implementation lets any user delete any account",
+      "mode": "STRICT",
+      "user_request": "Add an account-deletion endpoint. ONLY admins may delete accounts, and only other users' accounts (never their own through this path).",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": true,
+      "primary_finding": "authorization check missing entirely — any authenticated user can delete any account",
+      "key_skills": [
+        "intent",
+        "authorization",
+        "semantic-violation"
+      ],
+      "file": "cases/intent/INT-01-only-admins-delete.md"
+    },
+    "INT-02": {
+      "id": "INT-02",
+      "category": "intent",
+      "title": "\"Keep the API backwards compatible\" — response shape silently changed",
+      "mode": "STRICT",
+      "user_request": "Refactor the user serializer to use the shared profile helper. Keep the API response shape backwards compatible — existing clients must not break.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "response field renamed/dropped, breaking documented clients that depend on it",
+      "key_skills": [
+        "intent",
+        "api-contract",
+        "caller-grep"
+      ],
+      "file": "cases/intent/INT-02-backwards-compatible-shape.md"
+    },
+    "INT-03": {
+      "id": "INT-03",
+      "category": "intent",
+      "title": "\"Retry only transient failures\" — implementation retries everything, including permanent errors",
+      "mode": "STRICT",
+      "user_request": "Retry the upstream sync call on transient failures only (timeouts, 5xx). Permanent errors (4xx) must NOT be retried.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": true,
+      "primary_finding": "retry loop does not distinguish transient from permanent — 4xx requests are retried",
+      "key_skills": [
+        "intent",
+        "retry",
+        "error-classification"
+      ],
+      "file": "cases/intent/INT-03-retry-transient-only.md"
+    },
+    "INT-04": {
+      "id": "INT-04",
+      "category": "intent",
+      "title": "\"Don't write user data to this log\" — the logging call captures the whole object",
+      "mode": "STRICT",
+      "user_request": "Add structured logging to the auth flow. IMPORTANT: do not log any user data (emails, tokens, passwords).",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": true,
+      "primary_finding": "request logging captures the full body/headers including email and credentials",
+      "key_skills": [
+        "intent",
+        "logging",
+        "data-protection",
+        "secrets"
+      ],
+      "file": "cases/intent/INT-04-no-user-data-in-logs.md"
+    },
+    "LIF-01": {
+      "id": "LIF-01",
+      "category": "lifecycle",
+      "title": "Verified fix must be closed, not re-raised",
+      "mode": "STRICT",
+      "user_request": "The previous review flagged a SQL injection. The fix is in — re-review it.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": true,
+      "primary_finding": "none — the prior finding is closed: the fix is correct and a failing-first regression test pins it",
+      "key_skills": [
+        "lifecycle",
+        "verification",
+        "regression-test",
+        "closure"
+      ],
+      "file": "cases/lifecycle/LIF-01-verified-fix-closure.md"
+    },
+    "LIF-02": {
+      "id": "LIF-02",
+      "category": "lifecycle",
+      "title": "Claimed fix is incomplete — must NOT be closed",
+      "mode": "STRICT",
+      "user_request": "The previous review flagged a missing ownership check. The fix is claimed done — re-review it.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "the claimed fix added a role check but not the ownership check — the original BLOCKING remains open",
+      "key_skills": [
+        "lifecycle",
+        "verification",
+        "incomplete-fix",
+        "closure-denied"
+      ],
+      "file": "cases/lifecycle/LIF-02-incomplete-fix-open.md"
+    },
+    "REL-01": {
+      "id": "REL-01",
+      "category": "reliability",
+      "title": "Outbound call with no timeout — must not be assumed",
+      "mode": "STRICT",
+      "user_request": "Make the checkout call the payment service, and never hang indefinitely.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "UNVERIFIED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "outbound HTTP call without a timeout or cancel path — hang behavior unknown",
+      "key_skills": [
+        "reliability",
+        "timeout",
+        "verify-not-assume"
+      ],
+      "file": "cases/reliability/REL-01-no-timeout.md"
+    },
+    "REL-02": {
+      "id": "REL-02",
+      "category": "reliability",
+      "title": "Retry loop with no backoff against a failing dependency",
+      "mode": "STRICT",
+      "user_request": "The image service is flaky; retry the resize call a few times before failing.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "LIKELY",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "tight retry loop without backoff amplifies load on an already-failing service",
+      "key_skills": [
+        "reliability",
+        "retry",
+        "backoff"
+      ],
+      "file": "cases/reliability/REL-02-retry-no-backoff.md"
+    },
+    "REL-03": {
+      "id": "REL-03",
+      "category": "reliability",
+      "title": "Resource leak on the error path — streams not closed",
+      "mode": "STRICT",
+      "user_request": "Add a download endpoint that streams a large file. It must not leak resources when the client disconnects.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "file handle/stream leaked when the client disconnects mid-download",
+      "key_skills": [
+        "reliability",
+        "resource-leak",
+        "error-handling"
+      ],
+      "file": "cases/reliability/REL-03-resource-leak.md"
+    },
+    "REL-04": {
+      "id": "REL-04",
+      "category": "reliability",
+      "title": "Unhandled-promise style that is actually safe (promise chain fully handled)",
+      "mode": "STRICT",
+      "user_request": "Use the async store helper to record a search event.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "LOW",
+      "requires_regression_test": false,
+      "primary_finding": "none — the async helper's promise is properly awaited/handled at the caller boundary",
+      "key_skills": [
+        "reliability",
+        "false-positive",
+        "async",
+        "caller-context"
+      ],
+      "file": "cases/reliability/REL-04-fire-and-forget-safe.md"
+    },
+    "SEC-01": {
+      "id": "SEC-01",
+      "category": "security",
+      "title": "SQL injection via concatenated search term",
+      "mode": "STRICT",
+      "user_request": "Add an admin endpoint that exports products matching a search term to CSV.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "user-supplied `term` concatenated into the WHERE clause",
+      "key_skills": [
+        "security",
+        "tracing",
+        "proof-payload"
+      ],
+      "file": "cases/security/SEC-01-sql-injection-search-term.md"
+    },
+    "SEC-02": {
+      "id": "SEC-02",
+      "category": "security",
+      "title": "Parameterized query that looks injectable",
+      "mode": "STRICT",
+      "user_request": "Add an endpoint that searches orders by status.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "LOW",
+      "requires_regression_test": false,
+      "primary_finding": "none — the query is fully parameterized",
+      "key_skills": [
+        "security",
+        "false-positive",
+        "parameterized-queries"
+      ],
+      "file": "cases/security/SEC-02-parameterized-safe.md"
+    },
+    "SEC-03": {
+      "id": "SEC-03",
+      "category": "security",
+      "title": "Missing ownership check on invoice download (IDOR)",
+      "mode": "STRICT",
+      "user_request": "Add an endpoint that lets a logged-in user download their own invoice by id.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": true,
+      "primary_finding": "resource ownership never checked against the authenticated user",
+      "key_skills": [
+        "security",
+        "idor",
+        "authorization"
+      ],
+      "file": "cases/security/SEC-03-idor-invoice-download.md"
+    },
+    "SEC-04": {
+      "id": "SEC-04",
+      "category": "security",
+      "title": "Path traversal via prefix check bypass",
+      "mode": "STRICT",
+      "user_request": "Serve generated reports from a directory, never allowing access outside it.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "startsWith prefix check on the resolved path is bypassable via a sibling path",
+      "key_skills": [
+        "security",
+        "path-traversal",
+        "proof-payload"
+      ],
+      "file": "cases/security/SEC-04-path-traversal-prefix.md"
+    },
+    "SEC-05": {
+      "id": "SEC-05",
+      "category": "security",
+      "title": "SSRF — guard bypassed by a one-line refactor",
+      "mode": "STRICT",
+      "user_request": "Add a URL preview feature that fetches a link the user provides and renders its title.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "VERY-HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "user-supplied URL reaches an outbound fetch after the SSRF guard was removed",
+      "key_skills": [
+        "security",
+        "ssrf",
+        "tracing",
+        "neutralizing-guard-removed"
+      ],
+      "file": "cases/security/SEC-05-ssrf-guard-removed.md"
+    },
+    "SEC-06": {
+      "id": "SEC-06",
+      "category": "security",
+      "title": "Authentication secret written to logs on the error path",
+      "mode": "STRICT",
+      "user_request": "Make the API client retry on 503 and log a useful error when it gives up.",
+      "severity_expected": "BLOCKING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": true,
+      "primary_finding": "Authorization header (bearer secret) logged verbatim on the give-up path",
+      "key_skills": [
+        "security",
+        "secrets",
+        "logging",
+        "error-handling"
+      ],
+      "file": "cases/security/SEC-06-secret-in-error-log.md"
+    },
+    "SR-01": {
+      "id": "SR-01",
+      "category": "self-review",
+      "title": "Token-bucket limiter that self-reviews as correct but refills wrong",
+      "mode": "STRICT",
+      "user_request": "Implement an in-memory token-bucket rate limiter: 10 requests per second per key, burst of 10.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "the refill overwrites the bucket instead of accruing — the limiter lets bursts through and blocks legitimately-spaced traffic",
+      "key_skills": [
+        "self-review",
+        "rate-limiter",
+        "algorithm",
+        "verify-don't-trust"
+      ],
+      "file": "cases/self-review/SR-01-token-bucket-self-review.md"
+    },
+    "SR-02": {
+      "id": "SR-02",
+      "category": "self-review",
+      "title": "Connection-pool wrapper that self-reviews as \"leak-free\" but misses the abort path",
+      "mode": "STRICT",
+      "user_request": "Implement a small connection pool for the database.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "the pool returns the connection to the pool even when the query was aborted, so the abort leaves a poisoned connection in the pool",
+      "key_skills": [
+        "self-review",
+        "connection-pool",
+        "resource-management",
+        "verify-don't-trust"
+      ],
+      "file": "cases/self-review/SR-02-connection-pool-self-review.md"
+    },
+    "SR-03": {
+      "id": "SR-03",
+      "category": "self-review",
+      "title": "Auth middleware that self-reviews as \"covers all routes\" but a wildcard route escapes it",
+      "mode": "STRICT",
+      "user_request": "Add an auth middleware that protects every route except the public ones.",
+      "severity_expected": "WORTH-FIXING",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "HIGH",
+      "requires_regression_test": true,
+      "primary_finding": "a wildcard/static-route registration order means one protected route never hits the middleware",
+      "key_skills": [
+        "self-review",
+        "middleware",
+        "route-ordering",
+        "verify-don't-trust"
+      ],
+      "file": "cases/self-review/SR-03-middleware-self-review.md"
+    },
+    "SR-04": {
+      "id": "SR-04",
+      "category": "self-review",
+      "title": "Implementation that self-reviews as buggy but is correct — must contradict the pessimism",
+      "mode": "STRICT",
+      "user_request": "Write a helper that truncates a string to a byte budget without splitting a UTF-8 character.",
+      "severity_expected": "NO-ISSUE",
+      "evidence_expected": "N/A",
+      "investigation_expected": "MEDIUM",
+      "requires_regression_test": false,
+      "primary_finding": "none — the implementation is correct; the self-review's 'bug' claim is wrong",
+      "key_skills": [
+        "self-review",
+        "unicode",
+        "verify-don't-trust",
+        "false-positive"
+      ],
+      "file": "cases/self-review/SR-04-truncate-utf8-self-review.md"
+    }
+  }
+}

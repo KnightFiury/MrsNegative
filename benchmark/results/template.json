@@ -1,0 +1,20 @@
+{
+  "caseId": "CASE-ID-HERE",
+  "model": "",
+  "adapter": "",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": null,
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": null,
+    "regressionAppropriate": false,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": ""
+  }
+}
