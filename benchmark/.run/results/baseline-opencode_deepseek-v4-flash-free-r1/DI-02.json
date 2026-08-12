@@ -1,0 +1,22 @@
+{
+  "caseId": "DI-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Confirmed from the diff itself: the UPDATE increments version but never checks it, so the two-editors-same-version overwrite the user asked to prevent is guaranteed, not hypothetical."
+  }
+}

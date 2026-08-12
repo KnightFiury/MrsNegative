@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Missing user_id scoping is a clear IDOR on an enumerable sequential-id surface; structural absence of the check earns LIKELY-to-CONFIRMED, and since no payload was run in-session, LIKELY is the honest tag."
+  }
+}

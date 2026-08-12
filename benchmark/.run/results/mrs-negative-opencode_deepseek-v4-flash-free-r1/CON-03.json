@@ -1,0 +1,22 @@
+{
+  "caseId": "CON-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The real issue is that presence entries are never evicted — pruneExpired is a comment placeholder and no delete path exists — so the badge goes stale and the single-instance map leaks memory; concurrency and auth concerns are correctly treated as red herrings."
+  }
+}

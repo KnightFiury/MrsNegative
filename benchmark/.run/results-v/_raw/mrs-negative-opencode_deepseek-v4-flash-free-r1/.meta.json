@@ -1,0 +1,18 @@
+{
+  "condition": "mrs-negative",
+  "model": "opencode/deepseek-v4-flash-free",
+  "run": 1,
+  "date": "2026-08-12T07:03:55.974Z",
+  "done": [
+    "DEP-01",
+    "FP-01",
+    "FP-02",
+    "FP-03",
+    "INT-03",
+    "REL-03",
+    "SEC-02",
+    "SEC-03",
+    "SEC-05",
+    "SR-04"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "caseId": "ARC-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The guarantee demonstrably moved off the call site, but whether it actually fails depends on chargeOnce's idempotency, which is outside the diff — so it caps at WORTH-FIXING pending that client read, escalating to BLOCKING if the client isn't keyed on orderId."
+  }
+}

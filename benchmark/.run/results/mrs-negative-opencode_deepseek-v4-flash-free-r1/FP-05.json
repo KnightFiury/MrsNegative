@@ -1,0 +1,22 @@
+{
+  "caseId": "FP-05",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": "N/A",
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": "skip",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "No finding: the literals are the external contract's enum values, so the magic-string NITPICK is correctly withheld, and the 'free' fallback is a valid safe default."
+  }
+}

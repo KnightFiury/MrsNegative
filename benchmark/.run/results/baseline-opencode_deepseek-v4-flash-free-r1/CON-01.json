@@ -1,0 +1,22 @@
+{
+  "caseId": "CON-01",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The read-modify-write is provably non-atomic from the code and context (two reads can precede either write), so the violation of the no-negative-stock requirement is structurally certain despite being concurrency-dependent."
+  }
+}

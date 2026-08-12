@@ -1,0 +1,22 @@
+{
+  "caseId": "FP-01",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": "N/A",
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": "skip",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The allowlist gate on sort, literal coercion of dir, and bound $1 parameter genuinely neutralize the apparent injection risk, so no finding was raised — the correct call is silence, not a manufactured BLOCKING."
+  }
+}

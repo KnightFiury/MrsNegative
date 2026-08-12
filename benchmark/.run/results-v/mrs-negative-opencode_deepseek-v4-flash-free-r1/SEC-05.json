@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-05",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The diff deletes the only guard between user input and fetch, so the SSRF is CONFIRMED by direct input-to-sink trace against the stated VPC-on-10.0.0.0/8 context; severity BLOCKING and a required regression test follow directly."
+  }
+}

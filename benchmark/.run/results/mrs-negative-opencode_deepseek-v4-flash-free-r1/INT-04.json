@@ -1,0 +1,22 @@
+{
+  "caseId": "INT-04",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The password and email are written to a long-retention central log in both branches — a confirmed secrets-in-plaintext leak that directly contradicts the explicit no-user-data instruction, so BLOCKING with CONFIRMED evidence and a requested regression test."
+  }
+}

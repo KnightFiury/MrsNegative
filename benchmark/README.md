@@ -40,7 +40,7 @@ that Mrs. Negative is correct.** A high score means the tested model + this
 persona produced calibrated output on these cases — not that the persona is
 sound, and not that an untested model will behave the same.
 
-## Categories and case counts (v1.0.0, 38 cases)
+## Categories and case counts (v1.1.0, 41 cases)
 
 | Category | Directory | Cases | What it measures |
 |---|---|---|---|
@@ -54,9 +54,11 @@ sound, and not that an untested model will behave the same.
 | False positives | `cases/false-positives/` | 5 | suspicious-but-correct code that must stay silent |
 | Self-review bias | `cases/self-review/` | 4 | subtle flaws behind plausible AI-generated implementations |
 | Lifecycle | `cases/lifecycle/` | 2 | fix-verified closure, and the "fixed ≠ verified" negative case |
+| Maintainability | `cases/maintainability/` | 3 | magic numbers, duplicated helpers, misleading names — batched NITPICKs |
 
-~26% of cases are expected to be silent (`NO-ISSUE`). Silence is graded as
-success, never penalized.
+24% of cases are expected to be silent (`NO-ISSUE`); a further 7% are
+batched `NITPICK`s. The quiet floor (`NO-ISSUE` + `NITPICK`) is ~32%, above
+the 25% minimum. Silence is graded as success, never penalized.
 
 ## Case file format
 

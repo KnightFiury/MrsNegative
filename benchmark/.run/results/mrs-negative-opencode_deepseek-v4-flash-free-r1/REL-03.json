@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "FD leak on every abort is realistic-path resource exhaustion (crash at L4); traced the code path but could not execute in-session, so LIKELY, and it directly contradicts the request's cleanup intent."
+  }
+}

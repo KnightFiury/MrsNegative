@@ -1,0 +1,22 @@
+{
+  "caseId": "MAI-01",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "decline",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The only real issue is the duplicated 86400 magic value on an auth-token path — a silent-drift risk, not a blocking bug, so WORTH-FIXING with CONFIRMED evidence from the config export."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-04",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": null,
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": "skip",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "No finding: recordEvent self-catches, so there is no unhandled rejection and the un-awaited call cannot break or delay search — intent preserved, silence earned."
+  }
+}

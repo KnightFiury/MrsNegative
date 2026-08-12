@@ -1,0 +1,22 @@
+{
+  "caseId": "FP-04",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": null,
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": "skip",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The swallow is contract-required, documented, and internally contained (no unhandled rejection), so the diff gets a clean bill with no finding or regression test warranted."
+  }
+}

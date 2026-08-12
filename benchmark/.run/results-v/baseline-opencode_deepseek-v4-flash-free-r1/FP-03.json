@@ -1,0 +1,22 @@
+{
+  "caseId": "FP-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": "N/A",
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": "decline",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Loop is provably bounded by MAX_ATTEMPTS=3 with bounded linear backoff and a terminal throw, so no retry-storm finding exists and the code satisfies the stated intent."
+  }
+}

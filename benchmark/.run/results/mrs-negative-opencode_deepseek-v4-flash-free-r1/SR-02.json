@@ -1,0 +1,22 @@
+{
+  "caseId": "SR-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Primary finding is the success-path leak: the only release() lives in catch with no finally, so every successful query leaks its connection and forces a new create() per query — a BLOCKING violation of the stated intent, CONFIRMED by direct code trace."
+  }
+}

@@ -1,8 +1,8 @@
 {
-  "benchmarkVersion": "v1.0.0",
-  "generatedAt": "2026-08-12T04:17:50.548Z",
-  "count": 38,
-  "silentCount": 10,
+  "benchmarkVersion": "v1.1.0",
+  "generatedAt": "2026-08-12T07:07:08.236Z",
+  "count": 41,
+  "silentCount": 13,
   "cases": {
     "ARC-01": {
       "id": "ARC-01",
@@ -442,6 +442,60 @@
         "closure-denied"
       ],
       "file": "cases/lifecycle/LIF-02-incomplete-fix-open.md"
+    },
+    "MAI-01": {
+      "id": "MAI-01",
+      "category": "maintainability",
+      "title": "Token lifetime hard-coded where a named constant already exists",
+      "mode": "BATCH",
+      "user_request": "Keep the session token lifetime consistent across issue and extension.",
+      "severity_expected": "NITPICK",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "LOW",
+      "requires_regression_test": false,
+      "primary_finding": "token lifetime hard-coded as 86400 twice instead of using the existing SESSION_TTL_SECONDS constant",
+      "key_skills": [
+        "maintainability",
+        "magic-number",
+        "drift-risk"
+      ],
+      "file": "cases/maintainability/MAI-01-magic-number-token-ttl.md"
+    },
+    "MAI-02": {
+      "id": "MAI-02",
+      "category": "maintainability",
+      "title": "New email normalizer duplicates an existing shared util",
+      "mode": "BATCH",
+      "user_request": "Ensure emails are normalized before they reach the profile service.",
+      "severity_expected": "NITPICK",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "LOW",
+      "requires_regression_test": false,
+      "primary_finding": "new normalizeEmail() duplicates the existing normalize('email', …) util — use the shared one instead",
+      "key_skills": [
+        "maintainability",
+        "duplication",
+        "existing-helper"
+      ],
+      "file": "cases/maintainability/MAI-02-duplicate-email-normalizer.md"
+    },
+    "MAI-03": {
+      "id": "MAI-03",
+      "category": "maintainability",
+      "title": "validateOrderInput overpromises — it also normalizes",
+      "mode": "BATCH",
+      "user_request": "Validate order input before charging.",
+      "severity_expected": "NITPICK",
+      "evidence_expected": "CONFIRMED",
+      "investigation_expected": "LOW",
+      "requires_regression_test": false,
+      "primary_finding": "validateOrderInput has a side effect (normalization) its name does not promise — rename or split",
+      "key_skills": [
+        "maintainability",
+        "misleading-name",
+        "side-effect"
+      ],
+      "file": "cases/maintainability/MAI-03-validate-overpromises.md"
     },
     "REL-01": {
       "id": "REL-01",

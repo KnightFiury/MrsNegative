@@ -1,0 +1,22 @@
+{
+  "caseId": "FP-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Per-process mutex only serializes within a single instance, so the once-only guarantee silently breaks under horizontal scaling; a conditional UPDATE (rowCount gate) or SELECT FOR UPDATE is the durable fix, with deployment topology the reason evidence is LIKELY not CONFIRMED."
+  }
+}

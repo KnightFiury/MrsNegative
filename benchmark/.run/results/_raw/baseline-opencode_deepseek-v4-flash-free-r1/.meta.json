@@ -1,0 +1,9 @@
+{
+  "condition": "baseline",
+  "model": "opencode/deepseek-v4-flash-free",
+  "run": 1,
+  "date": "2026-08-12T06:29:07.125Z",
+  "done": [
+    "REL-02"
+  ]
+}

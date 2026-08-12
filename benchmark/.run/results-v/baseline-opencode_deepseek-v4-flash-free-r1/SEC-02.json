@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "decline",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The SQL is properly parameterized (no injection); the real defect is that pg query resolves to a QueryResult, so res.json(rows) returns the whole result object instead of the rows array."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-01",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "SQL injection is directly visible in the diff (raw term interpolated into the ILIKE pattern), so BLOCKING/CONFIRMED is warranted; the parameterized $1 fix preserves the endpoint's intent."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "caseId": "DEP-01",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "decline",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The missing-TTL concern is refuted by the wrapper's pinned EX:1800 (verified in-session), so the real findings are minor reliability guards worth WORTH-FIXING/LIKELY, not BLOCKING."
+  }
+}

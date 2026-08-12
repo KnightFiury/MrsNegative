@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "confirm",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Res 'close' on abort never destroys the readable stream, leaking the FD until EOF; pipe() lacks cleanup on dest close, and the missing src error handler plus the always-truthy record check add crash paths."
+  }
+}

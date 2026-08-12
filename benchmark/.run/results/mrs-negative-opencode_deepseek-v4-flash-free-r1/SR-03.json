@@ -1,0 +1,22 @@
+{
+  "caseId": "SR-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "BLOCKING because an unprotected static mount silently bypasses the user's 'every route' auth intent; evidence is CONFIRMED by tracing the explicit registration order in the diff, and a regression test asserting a 401 on /assets is warranted."
+  }
+}

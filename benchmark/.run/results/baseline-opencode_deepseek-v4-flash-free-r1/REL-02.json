@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "confirm",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Primary finding: retrying 429/503 with zero delay amplifies load on an overloaded service (load is the stated problem); secondary: uncaught fetch transport errors are neither retried nor converted to the intended error."
+  }
+}

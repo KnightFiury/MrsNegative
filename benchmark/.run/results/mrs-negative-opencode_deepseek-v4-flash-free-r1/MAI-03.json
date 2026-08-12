@@ -1,0 +1,22 @@
+{
+  "caseId": "MAI-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Primary finding is a CONFIRMED object-literal ordering bug — the trailing ...input spread overwrites the cleaned email/cardNumber so normalization silently never reaches the provider — tagged WORTH-FIXING rather than BLOCKING because it fails to deliver the requested cleaning without corrupting state or crashing, with the naming contract violation as a secondary WORTH-FIXING."
+  }
+}

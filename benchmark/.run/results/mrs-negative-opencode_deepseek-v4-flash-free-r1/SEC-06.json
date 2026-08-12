@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-06",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "LIKELY rather than CONFIRMED because the failure path couldn't be executed in-session, but the secret-to-log trace (client Authorization header → err.config.headers → logger pipeline) is fully visible in the diff."
+  }
+}

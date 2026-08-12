@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-04",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The startsWith prefix check is bypassed by sibling dirs sharing the /var/reports prefix, letting path.resolve('..') escape the boundary; the payload trace is complete and the sibling dirs are given in context, so BLOCKING with CONFIRMED evidence is warranted."
+  }
+}

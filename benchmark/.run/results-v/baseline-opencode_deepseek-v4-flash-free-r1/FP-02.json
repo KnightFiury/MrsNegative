@@ -1,0 +1,22 @@
+{
+  "caseId": "FP-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "confirm",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The lock correctly serializes check+consume in one process, but an in-process mutex cannot enforce the only-once invariant across multiple instances, so the DB conditional UPDATE / row-count check should be the source of truth."
+  }
+}

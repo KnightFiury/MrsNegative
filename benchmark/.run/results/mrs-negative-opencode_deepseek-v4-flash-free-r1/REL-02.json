@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Retry-without-backoff on overload statuses is a real load risk but not data loss/exploit/crash, so WORTH-FIXING with LIKELY evidence from the docs/code-path trace rather than BLOCKING."
+  }
+}

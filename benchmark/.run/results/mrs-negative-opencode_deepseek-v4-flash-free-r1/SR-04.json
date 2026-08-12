@@ -1,0 +1,22 @@
+{
+  "caseId": "SR-04",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": "N/A",
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": "skip",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Code is correct: for...of iterates code points and the break cuts only between whole characters, so the self-review's surrogate-pair worry is unfounded and no finding (or regression test) is warranted."
+  }
+}

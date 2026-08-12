@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-06",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The Authorization header carrying the long-lived SVC_SECRET is copied verbatim into broadly-accessible central logs via cfg.headers — a confirmed credential leak (BLOCKING); retrying every error instead of only 503 is a secondary WORTH-FIXING deviation from the request."
+  }
+}

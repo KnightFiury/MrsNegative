@@ -1,0 +1,22 @@
+{
+  "caseId": "ARC-01",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Route mounted before the global auth middleware leaves /admin/users unauthenticated, directly defeating the refactor's stated 'protected by default' intent; confirmed by the deterministic Express dispatch order in the diff."
+  }
+}

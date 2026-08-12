@@ -19,13 +19,14 @@ const ANSWERS_FILE = join(EXPECTED_DIR, 'answers.json');
 const CATEGORIES = new Set([
   'security', 'concurrency', 'reliability', 'data-integrity', 'intent',
   'dependencies', 'architecture', 'false-positives', 'self-review', 'lifecycle',
+  'maintainability',
 ]);
 
 // id prefix expected per category directory.
 const PREFIX_BY_CATEGORY = {
   security: 'SEC', concurrency: 'CON', reliability: 'REL', 'data-integrity': 'DI',
   intent: 'INT', dependencies: 'DEP', architecture: 'ARC', 'false-positives': 'FP',
-  'self-review': 'SR', lifecycle: 'LIF',
+  'self-review': 'SR', lifecycle: 'LIF', maintainability: 'MAI',
 };
 
 const MODES = new Set(['STRICT', 'BATCH']);
@@ -42,6 +43,7 @@ const REQUIRED_FIELDS = [
 const MIN_PER_CATEGORY = {
   security: 5, concurrency: 4, reliability: 4, 'data-integrity': 3, intent: 4,
   dependencies: 3, architecture: 3, 'false-positives': 4, 'self-review': 3, lifecycle: 2,
+  maintainability: 2,
 };
 const MIN_TOTAL = 30;
 const MIN_SILENCE_RATIO = 0.25;

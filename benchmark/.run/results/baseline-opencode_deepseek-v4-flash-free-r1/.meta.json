@@ -1,0 +1,8 @@
+{
+  "condition": "baseline",
+  "model": "opencode/deepseek-v4-flash-free",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "parsed": 41,
+  "failed": 0
+}

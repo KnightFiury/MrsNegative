@@ -1,0 +1,22 @@
+{
+  "caseId": "INT-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "decline",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Confirmed misclassification: a 404 (explicitly a permanent failure per the request) matches neither 400 nor 403, so it is retried 3 times and replaced by a generic error, defeating fail-fast; WORTH-FIXING because sync still terminates with an error after retries."
+  }
+}

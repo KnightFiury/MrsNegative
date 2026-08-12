@@ -1,0 +1,22 @@
+{
+  "caseId": "DEP-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "UNVERIFIED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "confirm",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The gap is confirmed (the comment asserts per-user/5/min/sliding-window with no supporting evidence in the diff), but the actual limiter defect is unverified without reading lib/rate-limit.js, so this is WORTH-FIXING rather than BLOCKING."
+  }
+}

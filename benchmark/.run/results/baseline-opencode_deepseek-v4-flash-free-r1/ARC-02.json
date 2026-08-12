@@ -1,0 +1,22 @@
+{
+  "caseId": "ARC-02",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "confirm",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Exactly-once now hinges on unverified chargeOnce internals plus a new non-atomic gap between the charge and the orders status update, so the guarantee needs confirmation against lib/payments.js before this ships."
+  }
+}

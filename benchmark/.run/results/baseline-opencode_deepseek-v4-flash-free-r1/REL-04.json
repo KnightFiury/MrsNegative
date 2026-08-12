@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-04",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": false,
+    "severity": null,
+    "evidence": null,
+    "primaryFound": false,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": false,
+    "intentPreserved": true,
+    "regressionStance": "skip",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Self-catching fire-and-forget correctly decouples analytics from the search response; the unhandled-rejection worry is a non-issue per the provided context, and no finding or regression test is warranted."
+  }
+}

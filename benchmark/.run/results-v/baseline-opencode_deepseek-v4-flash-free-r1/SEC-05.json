@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-05",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The diff itself removes the only sanitizeUrl call, so the input-to-sink trace (req.query.url straight into fetch) is directly confirmed from the provided code, and the user explicitly asked for internal addresses to be blocked."
+  }
+}

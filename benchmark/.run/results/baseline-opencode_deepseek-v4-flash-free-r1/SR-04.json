@@ -1,0 +1,22 @@
+{
+  "caseId": "SR-04",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "NITPICK",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "decline",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Correctness is sound and the self-review's surrogate-pair claim is a phantom; the only real issue is the minor O(n^2) re-encoding, so a NITPICK with no regression test is warranted."
+  }
+}

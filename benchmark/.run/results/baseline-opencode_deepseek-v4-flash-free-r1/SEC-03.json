@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Context explicitly confirms requireAuth never checks invoice ownership and ids are enumerable sequential integers, so the IDOR is confirmed; fix with a user_id comparison returning 403, plus a regression test asserting cross-user download is denied."
+  }
+}

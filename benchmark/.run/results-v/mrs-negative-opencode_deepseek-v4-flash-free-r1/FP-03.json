@@ -1,0 +1,22 @@
+{
+  "caseId": "FP-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "NITPICK",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": false,
+    "verificationConcrete": false,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "decline",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The retry loop is genuinely capped by MAX_ATTEMPTS, so the retry-storm concern is a false positive; the only real observation is the nitpick that the rethrow swallows the original error."
+  }
+}

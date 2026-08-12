@@ -1,0 +1,8 @@
+{
+  "condition": "mrs-negative",
+  "model": "opencode/deepseek-v4-flash-free",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "parsed": 10,
+  "failed": 0
+}

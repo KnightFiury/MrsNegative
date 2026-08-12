@@ -1,0 +1,22 @@
+{
+  "caseId": "INT-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "confirm",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Diff confirms only 400/403 fail fast while other permanent 4xx (401/404/422/409) are retried, contradicting the explicit fail-fast requirement; WORTH-FIXING rather than BLOCKING because the job still terminates with an error instead of corrupting data."
+  }
+}

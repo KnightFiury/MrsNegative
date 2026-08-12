@@ -1,0 +1,22 @@
+{
+  "caseId": "INT-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "confirm",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The misclassification is directly traceable from the provided context (404 explicitly named permanent yet retried), but is an intent/fail-fast violation with no data loss or crash, so WORTH-FIXING with LIKELY evidence rather than BLOCKING."
+  }
+}

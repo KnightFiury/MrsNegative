@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-01",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The unbounded fetch timeout and missing error path directly violate the stated 'never hang the customer' intent; context establishes the provider's 30s timeout and fetch's unbounded default, so BLOCKING is evidence-backed, and the fix names an explicit timeout, abort mapping, and failing-first tests."
+  }
+}

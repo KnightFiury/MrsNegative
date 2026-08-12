@@ -1,0 +1,22 @@
+{
+  "caseId": "SEC-05",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "LIKELY",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "LIKELY because the url-to-fetch trace and VPC context are directly verifiable from the diff, but no live payload was executed in-session; the dropped guard directly violates the user's explicit SSRF requirement."
+  }
+}

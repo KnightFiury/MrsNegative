@@ -1,0 +1,22 @@
+{
+  "caseId": "DEP-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "mrs-negative",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "WORTH-FIXING",
+    "evidence": "UNVERIFIED",
+    "primaryFound": true,
+    "evidenceBacked": false,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "The comment asserts 5/user/min sliding-window behavior that the diff cannot show is true, so it is a genuine intent/security risk raised as WORTH-FIXING (UNVERIFIED) rather than escalating to BLOCKING on unconfirmed keying semantics."
+  }
+}

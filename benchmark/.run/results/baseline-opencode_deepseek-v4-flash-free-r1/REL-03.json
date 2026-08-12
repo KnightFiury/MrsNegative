@@ -1,0 +1,22 @@
+{
+  "caseId": "REL-03",
+  "model": "opencode/deepseek-v4-flash-free",
+  "condition": "baseline",
+  "run": 1,
+  "benchmarkVersion": "v1.1.0",
+  "output": {
+    "hasFinding": true,
+    "severity": "BLOCKING",
+    "evidence": "CONFIRMED",
+    "primaryFound": true,
+    "evidenceBacked": true,
+    "verificationConcrete": true,
+    "fixConcrete": true,
+    "intentPreserved": true,
+    "regressionStance": "require",
+    "regressionAppropriate": true,
+    "inventedSeverity": null,
+    "unverifiedEscalated": false,
+    "notes": "Primary finding is the missing destroy-on-close (FD leak on every aborted download, the exact case the user asked to handle) plus an unhandled 'error' crash risk; both are confirmed standard Node stream semantics, with the dead 404 check noted as secondary."
+  }
+}
